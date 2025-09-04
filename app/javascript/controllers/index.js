@@ -4,5 +4,17 @@
 
 import { application } from "./application"
 
+import CollapseController from "./collapse_controller"
+application.register("collapse", CollapseController)
+
+import DropdownController from "./dropdown_controller"
+application.register("dropdown", DropdownController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import NotificationController from "./notification_controller"
+application.register("notification", NotificationController)
+
+import TaskCommentsController from "./task_comments_controller"
+application.register("task-comments", TaskCommentsController)

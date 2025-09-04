@@ -1,0 +1,10 @@
+.border-bottom.pb-3.mb-3
+  .d-flex.justify-content-between.align-items-start
+    .flex-grow-1
+      .d-flex.align-items-center.gap-2
+        .fw-bold = comment.user.name
+        .text-muted.small = time_ago
+      .mt-2 = comment.text
+    = form_with url: to_do_item_comment_path(to_do_item, comment), method: :delete, local: true, class: 'd-inline' do |form|
+      button.btn.btn-sm.btn-outline-danger type="submit" title="Delete comment"
+        i.fas.fa-times

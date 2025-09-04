@@ -1,0 +1,19 @@
+.card class=card_classes data-controller=(collapsible ? "collapse" : nil)
+  - if collapsible
+    .card-header class=header_classes style="cursor: pointer;" data-action="click->collapse#toggle" data-collapse-target="toggle"
+      .d-flex.justify-content-between.align-items-center.w-100
+        .d-flex.align-items-center
+          h3.mb-0 = title
+          - if badge.present?
+            span.badge.bg-secondary.ms-2 id="comments-count" = badge
+        i.fas class=chevron_icon 
+    .card-body data-collapse-target="content"
+      = content
+  - else
+    .card-header class=header_classes
+      .d-flex.align-items-center
+        h3.mb-0 = title
+        - if badge.present?
+          span.badge.bg-secondary.ms-2 id="comments-count" = badge
+    .card-body
+      = content

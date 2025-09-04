@@ -1,0 +1,15 @@
+.relative.inline-block.text-left data-controller="dropdown" data-action="click@window->dropdown#clickOutside"
+  button.inline-flex.justify-center.w-full.rounded-md.border.border-gray-300.bg-white.px-2.py-1.text-sm.font-medium.text-gray-700.shadow-sm.hover:bg-gray-50.focus:outline-none.focus:ring-2.focus:ring-indigo-500.focus:ring-offset-2.focus:ring-offset-gray-100 type="button" data-action="click->dropdown#toggle click->dropdown#stopPropagation"
+    i.fas.fa-ellipsis-v
+  .hidden.w-48.rounded-md.bg-white.shadow-lg.ring-1.ring-black.ring-opacity-5.focus:outline-none.dropdown-menu role="menu" data-dropdown-target="menu"
+    - items.each_with_index do |item, index|
+      - if item[:divider]
+        .border-t.border-gray-100
+      - else
+        - link_options = { class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 #{item[:class]}" }
+        - link_options[:method] = item[:method] if item[:method]
+        - link_options.merge!(item[:data]) if item[:data]
+        = link_to item[:url], link_options, role: "menuitem" do
+          - if item[:icon]
+            i class="fas fa-#{item[:icon]} mr-2"
+          = item[:text]

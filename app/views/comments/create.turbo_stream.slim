@@ -1,0 +1,9 @@
+= turbo_stream.append "comments-list" do
+  div id="comment-#{@comment.token}"
+    = render Comments::CommentComponent.new(comment: @comment, to_do_item: @to_do_item)
+
+= turbo_stream.replace "comment-form" do
+  = render "comments/form", to_do_item: @to_do_item, comment: @to_do_item.comments.build
+
+= turbo_stream.update "comments-count" do
+  = @to_do_item.comments.count

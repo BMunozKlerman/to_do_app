@@ -1,0 +1,4 @@
+= turbo_stream.remove "comment-#{@comment.token}"
+
+= turbo_stream.update "comments-count" do
+  = @to_do_item.comments.count

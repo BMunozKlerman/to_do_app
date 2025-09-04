@@ -30,9 +30,10 @@ class ToDoItemsController < ApplicationController
 
   def update
     if @to_do_item.update(to_do_item_params)
-      # If this is a status-only update (from checkbox), redirect to index without notice
+      # If this is a status-only update (from checkbox), show notification
       if params[:to_do_item].keys == [ "status" ]
-        redirect_to to_do_items_path
+        status_text = @to_do_item.completed? ? "completed" : "pending"
+        redirect_to to_do_items_path, notice: "Task marked as #{status_text}!"
       else
         redirect_to @to_do_item, notice: "To-do item was successfully updated."
       end
@@ -72,7 +73,7 @@ class ToDoItemsController < ApplicationController
   private
 
   def set_to_do_item
-    @to_do_item = ToDoItem.find(params[:id])
+    @to_do_item = ToDoItem.find_by!(token: params[:token])
   end
 
   def set_users

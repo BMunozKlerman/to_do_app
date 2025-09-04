@@ -1,0 +1,7 @@
+#comments-list data-controller="task-comments" data-task-comments-task-token-value=to_do_item.token
+  - if to_do_item.comments.any?
+    - to_do_item.comments.order(:created_at).each do |comment|
+      div id="comment-#{comment.token}"
+        = render Comments::CommentComponent.new(comment: comment, to_do_item: to_do_item)
+  - else
+    p.text-muted No comments yet.

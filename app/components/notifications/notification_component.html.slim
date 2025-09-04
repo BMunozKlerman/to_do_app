@@ -1,0 +1,6 @@
+.alert class=alert_classes role="alert" data-controller="notification" data-notification-duration-value=duration data-notification-dismissible-value=dismissible style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 500px;"
+  .d-flex.align-items-center
+    i.fas.me-2 class=icon_class 
+    .flex-grow-1 = message
+    - if dismissible
+      button.btn-close type="button" data-action="click->notification#close" aria-label="Close"

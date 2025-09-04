@@ -1,0 +1,8 @@
+= form_with model: [to_do_item, comment], local: false, data: { turbo_stream: true } do |form|
+  .mb-3
+    = form.label :user_id, 'Comment as', class: 'form-label'
+    = form.select :user_id, options_from_collection_for_select(User.all.order(:name), :id, :name), { prompt: 'Select user' }, { class: 'form-select' }
+  .mb-3
+    = form.label :text, 'Add a comment', class: 'form-label'
+    = form.text_area :text, rows: 3, class: 'form-control', placeholder: 'Write your comment here...'
+  = form.submit 'Add Comment', class: 'btn btn-primary'

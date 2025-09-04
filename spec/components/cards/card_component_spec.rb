@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe ToDoItemCardComponent, type: :component do
+RSpec.describe Cards::CardComponent, type: :component do
   pending "add some examples to (or delete) #{__FILE__}"
 
   # it "renders something useful" do

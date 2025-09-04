@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_04_012931) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_04_215728) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "to_do_item_id", null: false
+    t.bigint "user_id", null: false
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "text"
+    t.index ["to_do_item_id"], name: "index_comments_on_to_do_item_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "to_do_items", force: :cascade do |t|
     t.string "token", null: false
@@ -42,6 +53,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_04_012931) do
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
+  add_foreign_key "comments", "to_do_items"
+  add_foreign_key "comments", "users"
   add_foreign_key "to_do_items", "users", column: "assigned_to_id"
   add_foreign_key "to_do_items", "users", column: "created_by_id"
 end

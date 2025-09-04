@@ -1,11 +1,6 @@
 .row
   .col-md-8
-    .card
-      .card-header.d-flex.justify-content-between.align-items-center
-        h3.mb-0 = @to_do_item.name
-        - if @to_do_item.overdue?
-          span.badge.bg-danger Overdue
-      .card-body
+    = render Cards::CardComponent.new(title: @to_do_item.name, badge: (@to_do_item.overdue? ? "Overdue" : nil)) do
         .row.mb-3
           .col-sm-3
             strong Status:
@@ -24,11 +19,11 @@
             strong Estimated Duration:
           .col-sm-9
             - if @to_do_item.estimated_duration.present?
-              span.badge.bg-info = @to_do_item.estimated_duration
+              span.badge.bg-info.me-2 = @to_do_item.estimated_duration
             - else
-              span.text-muted No estimate available
-              = form_with url: estimate_duration_to_do_item_path(@to_do_item), method: :post, local: true, class: 'd-inline ms-2' do |form|
-                = form.submit 'Estimate Duration', class: 'btn btn-sm btn-outline-primary', data: { confirm: 'This will call the Gemini AI API to estimate duration. Continue?', disable_with: 'Estimating...' }
+              span.text-muted.me-2 No estimate available
+            = form_with url: estimate_duration_to_do_item_path(@to_do_item), method: :post, local: true, class: 'd-inline' do |form|
+              = form.submit 'Estimate Duration', class: 'btn btn-sm btn-outline-primary', data: { confirm: 'This will call the Gemini AI API to estimate duration. Continue?', disable_with: 'Estimating...' }
         
         .row.mb-3
           .col-sm-3
@@ -67,21 +62,33 @@
           = link_to 'Back to List', to_do_items_path, class: 'btn btn-secondary me-2'
           = link_to 'Delete', @to_do_item, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
 
+    .mt-4
+      = render Cards::CardComponent.new(title: "Comments", badge: @to_do_item.comments.count) do
+        = render "comments/real_time_comments", to_do_item: @to_do_item
+        
+        .mt-3#comment-form
+          = form_with model: [@to_do_item, @to_do_item.comments.build], local: false, data: { turbo_stream: true } do |form|
+            .mb-3
+              = form.label :user_id, 'Comment as', class: 'form-label'
+              = form.select :user_id, options_from_collection_for_select(User.all.order(:name), :id, :name), { prompt: 'Select user' }, { class: 'form-select' }
+            .mb-3
+              = form.label :text, 'Add a comment', class: 'form-label'
+              = form.text_area :text, rows: 3, class: 'form-control', placeholder: 'Write your comment here...'
+            = form.submit 'Add Comment', class: 'btn btn-primary'
+
   .col-md-4
-    .card
-      .card-header
-        h5.mb-0 Followers (#{@follower_users.count})
-      .card-body
+    = render Cards::CardComponent.new(title: "Followers", badge: @follower_users.count) do
         - if @follower_users.any?
           - @follower_users.each do |user|
             .d-flex.justify-content-between.align-items-center.mb-2
               span = user.name
-              = link_to 'Remove', remove_follower_to_do_item_path(@to_do_item, user_id: user.id), method: :delete, class: 'btn btn-sm btn-outline-danger'
+              = form_with url: remove_follower_to_do_item_path(@to_do_item), method: :delete, local: true, class: 'd-inline' do |form|
+                = form.hidden_field :user_id, value: user.id
+                button.btn.btn-sm.btn-outline-danger type="submit" title="Remove follower"
+                  i.fas.fa-times
         - else
           p.text-muted No followers yet.
         
         .mt-3
           = form_with url: add_follower_to_do_item_path(@to_do_item), method: :patch, local: true do |form|
-            .input-group
-              = form.select :user_id, options_from_collection_for_select(User.all.order(:name), :id, :name), { prompt: 'Select user to follow' }, { class: 'form-select' }
-              = form.submit 'Add Follower', class: 'btn btn-outline-primary'
+            = form.select :user_id, options_from_collection_for_select(User.where.not(id: @follower_users.pluck(:id)).order(:name), :id, :name), { prompt: 'Select user to follow' }, { class: 'form-select', onchange: 'this.form.submit();' }

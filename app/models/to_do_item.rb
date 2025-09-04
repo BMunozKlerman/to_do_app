@@ -1,6 +1,7 @@
 class ToDoItem < ApplicationRecord
   belongs_to :assigned_to, class_name: "User"
   belongs_to :created_by, class_name: "User"
+  has_many :comments, dependent: :destroy
 
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: %w[pending completed] }
@@ -37,6 +38,10 @@ class ToDoItem < ApplicationRecord
 
   def completed?
     status == "completed"
+  end
+
+  def to_param
+    token
   end
 
   private
