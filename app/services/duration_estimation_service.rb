@@ -1,45 +1,19 @@
-require "httparty"
-
 class DurationEstimationService
-  include HTTParty
-  base_uri "https://generativelanguage.googleapis.com/v1beta"
-
-  def initialize(api_key = nil)
-    @api_key = api_key || ENV["GEMINI_API_KEY"]
-    raise "Gemini API key not found. Please set GEMINI_API_KEY environment variable." unless @api_key
+  def initialize(gemini_service = nil)
+    @gemini_service = gemini_service || GeminiService.new
   end
 
   def estimate_duration(task_name, task_description = nil)
     prompt = build_prompt(task_name, task_description)
 
-    response = self.class.post(
-      "/models/gemini-1.5-flash:generateContent",
-      headers: { "Content-Type" => "application/json" },
-      query: { key: @api_key },
-      body: {
-        contents: [
-          {
-            parts: [
-              { text: prompt }
-            ]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 100
-        }
-      }.to_json
-    )
+    response = @gemini_service.generate_content(prompt, {
+      generation_config: {
+        temperature: 0.3,
+        max_output_tokens: 100
+      }
+    })
 
-    if response.success?
-      parse_duration_response(response.parsed_response)
-    else
-      Rails.logger.error "Gemini API error: #{response.code} - #{response.body}"
-      "Unable to estimate duration"
-    end
-  rescue => e
-    Rails.logger.error "Duration estimation error: #{e.message}"
-    "Unable to estimate duration"
+    parse_duration_response(response)
   end
 
   private
@@ -58,11 +32,9 @@ Task: #{task_name}"
   end
 
   def parse_duration_response(response)
-    return "Unable to estimate duration" unless response&.dig("candidates")&.first&.dig("content")&.dig("parts")&.first&.dig("text")
-
-    duration_text = response["candidates"].first["content"]["parts"].first["text"].strip
+    return "Unable to estimate duration" if response == "Unable to process request"
 
     # Clean up the response to extract just the duration
-    duration_text.gsub(/[^\w\s]/, "").strip
+    response.gsub(/[^\w\s]/, "").strip
   end
 end
