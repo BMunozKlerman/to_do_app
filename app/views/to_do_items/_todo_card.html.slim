@@ -1,0 +1,26 @@
+div class="card mb-3 #{'border-warning' if todo_item.overdue?}"
+  .card-body
+    .d-flex.justify-content-between.align-items-start.mb-2
+      h5.card-title.mb-0
+        = link_to todo_item.name, todo_item, class: "text-decoration-none"
+        - if todo_item.overdue?
+          span.badge.bg-danger.ms-2 Overdue
+      = render StatusBadgeComponent.new(status: todo_item.status)
+    
+    p.card-text.text-muted.small
+      strong Assigned to: 
+      = todo_item.assigned_to.name
+      br
+      strong Due: 
+      = todo_item.due_date.strftime("%B %d, %Y")
+      - if todo_item.followers.present?
+        br
+        strong Followers: 
+        = todo_item.followers.count
+    
+    - if todo_item.description.present?
+      p.card-text = truncate(todo_item.description, length: 100)
+    
+    .d-flex.gap-2
+      = link_to "View", todo_item, class: "btn btn-sm btn-outline-primary"
+      = link_to "Edit", edit_to_do_item_path(todo_item), class: "btn btn-sm btn-outline-secondary"

@@ -1,0 +1,87 @@
+.row
+  .col-md-8
+    .card
+      .card-header.d-flex.justify-content-between.align-items-center
+        h3.mb-0 = @to_do_item.name
+        - if @to_do_item.overdue?
+          span.badge.bg-danger Overdue
+      .card-body
+        .row.mb-3
+          .col-sm-3
+            strong Status:
+          .col-sm-9
+            = form_with model: @to_do_item, local: true, class: 'd-inline' do |form|
+              = form.check_box :status, { checked: @to_do_item.completed?, onchange: 'this.form.submit();', class: 'form-check-input me-2' }, 'completed', 'pending'
+              = form.label :status, (@to_do_item.completed? ? 'Completed' : 'Pending'), class: 'form-check-label'
+        
+        .row.mb-3
+          .col-sm-3
+            strong Due Date:
+          .col-sm-9 = @to_do_item.due_date.strftime('%B %d, %Y')
+        
+        .row.mb-3
+          .col-sm-3
+            strong Estimated Duration:
+          .col-sm-9
+            - if @to_do_item.estimated_duration.present?
+              span.badge.bg-info = @to_do_item.estimated_duration
+            - else
+              span.text-muted No estimate available
+              = form_with url: estimate_duration_to_do_item_path(@to_do_item), method: :post, local: true, class: 'd-inline ms-2' do |form|
+                = form.submit 'Estimate Duration', class: 'btn btn-sm btn-outline-primary', data: { confirm: 'This will call the Gemini AI API to estimate duration. Continue?', disable_with: 'Estimating...' }
+        
+        .row.mb-3
+          .col-sm-3
+            strong Assigned To:
+          .col-sm-9 = @to_do_item.assigned_to.name
+        
+        .row.mb-3
+          .col-sm-3
+            strong Created By:
+          .col-sm-9 = @to_do_item.created_by.name
+        
+        - if @to_do_item.description.present?
+          .row.mb-3
+            .col-sm-3
+              strong Description:
+            .col-sm-9 = simple_format(@to_do_item.description)
+        
+        .row.mb-3
+          .col-sm-3
+            strong Token:
+          .col-sm-9
+            code = @to_do_item.token
+        
+        .row.mb-3
+          .col-sm-3
+            strong Created:
+          .col-sm-9 = @to_do_item.created_at.strftime('%B %d, %Y at %I:%M %p')
+        
+        .row.mb-3
+          .col-sm-3
+            strong Updated:
+          .col-sm-9 = @to_do_item.updated_at.strftime('%B %d, %Y at %I:%M %p')
+        
+        .mt-4
+          = link_to 'Edit', edit_to_do_item_path(@to_do_item), class: 'btn btn-primary me-2'
+          = link_to 'Back to List', to_do_items_path, class: 'btn btn-secondary me-2'
+          = link_to 'Delete', @to_do_item, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger'
+
+  .col-md-4
+    .card
+      .card-header
+        h5.mb-0 Followers (#{@follower_users.count})
+      .card-body
+        - if @follower_users.any?
+          - @follower_users.each do |user|
+            .d-flex.justify-content-between.align-items-center.mb-2
+              span = user.name
+              = link_to 'Remove', remove_follower_to_do_item_path(@to_do_item, user_id: user.id), method: :delete, class: 'btn btn-sm btn-outline-danger'
+        - else
+          p.text-muted No followers yet.
+        
+        .mt-3
+          = form_with url: add_follower_to_do_item_path(@to_do_item), method: :patch, local: true do |form|
+            .input-group
+              = form.select :user_id, options_from_collection_for_select(User.all.order(:name), :id, :name), { prompt: 'Select user to follow' }, { class: 'form-select' }
+              = form.submit 'Add Follower', class: 'btn btn-outline-primary'

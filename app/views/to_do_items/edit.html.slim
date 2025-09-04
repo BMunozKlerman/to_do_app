@@ -1,0 +1,41 @@
+h1 Edit To-Do Item
+
+= form_with model: @to_do_item, local: true do |form|
+  - if @to_do_item.errors.any?
+    .alert.alert-danger
+      h4 = "#{pluralize(@to_do_item.errors.count, 'error')} prohibited this to-do item from being saved:"
+      ul.mb-0
+        - @to_do_item.errors.full_messages.each do |message|
+          li = message
+
+  .row
+    .col-md-6
+      .mb-3
+        = form.label :name, class: 'form-label'
+        = form.text_field :name, class: 'form-control'
+      
+      .mb-3
+        .form-check
+          = form.check_box :status, { class: 'form-check-input' }, 'completed', 'pending'
+          = form.label :status, 'Mark as completed', class: 'form-check-label'
+      
+      .mb-3
+        = form.label :due_date, class: 'form-label'
+        = form.date_field :due_date, class: 'form-control'
+    
+    .col-md-6
+      .mb-3
+        = form.label :assigned_to_id, 'Assigned To', class: 'form-label'
+        = form.select :assigned_to_id, options_from_collection_for_select(@users, :id, :name, @to_do_item.assigned_to_id), { prompt: 'Select user' }, { class: 'form-select' }
+      
+      .mb-3
+        = form.label :created_by_id, 'Created By', class: 'form-label'
+        = form.select :created_by_id, options_from_collection_for_select(@users, :id, :name, @to_do_item.created_by_id), { prompt: 'Select user' }, { class: 'form-select' }
+  
+  .mb-3
+    = form.label :description, class: 'form-label'
+    = form.text_area :description, rows: 4, class: 'form-control'
+  
+  .mb-3
+    = form.submit 'Update To-Do Item', class: 'btn btn-primary me-2'
+    = link_to 'Cancel', @to_do_item, class: 'btn btn-secondary'

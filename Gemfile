@@ -62,8 +62,14 @@ gem "sidekiq", "~> 8.0"
 
 gem "redis", "~> 5.4"
 
-gem "rspec-rails", "~> 8.0", groups: [:development, :test]
+gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
 
 gem "slim-rails", "~> 3.7"
 
+gem "view_component", "~> 3.0"
+
+gem "uuid", "~> 2.3"
+
 gem "dotenv-rails", "~> 3.1"
+
+gem "httparty", "~> 0.21"

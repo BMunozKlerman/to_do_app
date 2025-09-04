@@ -1,0 +1,69 @@
+h1 = @user.name
+
+.row
+  .col-md-4
+    .card
+      .card-header
+        h5.mb-0 User Information
+      .card-body
+        p
+          strong Name: 
+          = @user.name
+        p
+          strong Token: 
+          code = @user.token
+        p
+          strong Created: 
+          = @user.created_at.strftime('%B %d, %Y at %I:%M %p')
+
+  .col-md-8
+    .row
+      .col-md-6
+        .card.mb-3
+          .card-header
+            h5.mb-0 Assigned Todos (#{@assigned_todos.count})
+          .card-body
+            - if @assigned_todos.any?
+              - @assigned_todos.limit(5).each do |todo|
+                .d-flex.justify-content-between.align-items-center.mb-2
+                  = link_to todo.name, todo, class: 'text-decoration-none'
+                  span.badge class="bg-#{todo.status == 'completed' ? 'success' : todo.status == 'in_progress' ? 'primary' : 'warning'}"
+                    = todo.status.humanize
+              - if @assigned_todos.count > 5
+                p.text-muted = "And #{@assigned_todos.count - 5} more..."
+            - else
+              p.text-muted No assigned todos.
+
+      .col-md-6
+        .card.mb-3
+          .card-header
+            h5.mb-0 Created Todos (#{@created_todos.count})
+          .card-body
+            - if @created_todos.any?
+              - @created_todos.limit(5).each do |todo|
+                .d-flex.justify-content-between.align-items-center.mb-2
+                  = link_to todo.name, todo, class: 'text-decoration-none'
+                  span.badge class="bg-#{todo.status == 'completed' ? 'success' : todo.status == 'in_progress' ? 'primary' : 'warning'}"
+                    = todo.status.humanize
+              - if @created_todos.count > 5
+                p.text-muted = "And #{@created_todos.count - 5} more..."
+            - else
+              p.text-muted No created todos.
+
+    .card
+      .card-header
+        h5.mb-0 Followed Todos (#{@followed_todos.count})
+      .card-body
+        - if @followed_todos.any?
+          - @followed_todos.limit(10).each do |todo|
+            .d-flex.justify-content-between.align-items-center.mb-2
+              = link_to todo.name, todo, class: 'text-decoration-none'
+              span.badge class="bg-#{todo.status == 'completed' ? 'success' : todo.status == 'in_progress' ? 'primary' : 'warning'}"
+                = todo.status.humanize
+          - if @followed_todos.count > 10
+            p.text-muted = "And #{@followed_todos.count - 10} more..."
+        - else
+          p.text-muted No followed todos.
+
+.mt-4
+  = link_to 'Back to Users', users_path, class: 'btn btn-secondary'

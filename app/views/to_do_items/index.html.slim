@@ -1,0 +1,104 @@
+h1 To-Do Items
+
+= link_to 'New To-Do Item', new_to_do_item_path, class: 'btn btn-primary mb-3'
+
+
+
+/ Pending tasks
+h3.mt-4 Pending Tasks
+.table-responsive
+  table.table.table-striped
+    thead
+      tr
+        th width="50"
+        th Name
+        th Due Date
+        th Duration
+        th Assigned To
+        th Created By
+        th Followers
+        th Actions
+    tbody
+      - @to_do_items.pending.each do |item|
+        tr class="#{'table-warning' if item.overdue?}" style="cursor: pointer;" onclick="window.location.href='#{to_do_item_path(item)}'"
+          td.text-center
+            div onclick="event.stopPropagation();"
+              = form_with model: item, local: true, class: 'd-inline' do |form|
+                = form.check_box :status, { checked: item.completed?, onchange: 'this.form.submit();', class: 'form-check-input' }, 'completed', 'pending'
+          td
+            = item.name
+            - if item.overdue?
+              span.badge.bg-danger.ms-2 Overdue
+          td = item.due_date.strftime('%Y-%m-%d')
+          td
+            - if item.estimated_duration.present?
+              span.badge.bg-info = item.estimated_duration
+            - else
+              span.text-muted No estimate
+          td = item.assigned_to.name
+          td = item.created_by.name
+          td
+            - if item.followers.present?
+              = item.followers.count
+            - else
+              | 0
+          td onclick="event.stopPropagation();"
+            = link_to 'Show', item, class: 'btn btn-sm btn-outline-primary me-1'
+            = link_to 'Edit', edit_to_do_item_path(item), class: 'btn btn-sm btn-outline-secondary me-1'
+            = link_to 'Delete', item, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-outline-danger'
+
+- if @to_do_items.pending.empty?
+  .alert.alert-info No pending tasks.
+
+/ Completed tasks (collapsible)
+.mt-5
+  button.btn.btn-outline-secondary.btn-sm.collapse-toggle type="button" data-bs-toggle="collapse" data-bs-target="#completedTasks" aria-expanded="false" aria-controls="completedTasks"
+    | Completed Tasks 
+    span.badge.bg-secondary.ms-2 = @to_do_items.completed.count
+    i.fas.fa-chevron-down.ms-1
+  .collapse#completedTasks.mt-3
+    .completed-section
+      .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th width="50"
+              th Name
+              th Due Date
+              th Duration
+              th Assigned To
+              th Created By
+              th Followers
+              th Actions
+          tbody
+            - @to_do_items.completed.each do |item|
+              tr style="cursor: pointer;" onclick="window.location.href='#{to_do_item_path(item)}'"
+                td.text-center
+                  div onclick="event.stopPropagation();"
+                    = form_with model: item, local: true, class: 'd-inline' do |form|
+                      = form.check_box :status, { checked: item.completed?, onchange: 'this.form.submit();', class: 'form-check-input' }, 'completed', 'pending'
+                td
+                  = item.name
+                td = item.due_date.strftime('%Y-%m-%d')
+                td
+                  - if item.estimated_duration.present?
+                    span.badge.bg-info = item.estimated_duration
+                  - else
+                    span.text-muted No estimate
+                td = item.assigned_to.name
+                td = item.created_by.name
+                td
+                  - if item.followers.present?
+                    = item.followers.count
+                  - else
+                    | 0
+                td onclick="event.stopPropagation();"
+                  = link_to 'Show', item, class: 'btn btn-sm btn-outline-primary me-1'
+                  = link_to 'Edit', edit_to_do_item_path(item), class: 'btn btn-sm btn-outline-secondary me-1'
+                  = link_to 'Delete', item, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-outline-danger'
+
+- if @to_do_items.completed.empty?
+  .alert.alert-info No completed tasks.
+
+- if @to_do_items.empty?
+  .alert.alert-info No to-do items found.

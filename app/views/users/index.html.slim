@@ -1,0 +1,26 @@
+h1 Users
+
+.table-responsive
+  table.table.table-striped
+    thead
+      tr
+        th Name
+        th Token
+        th Assigned Todos
+        th Created Todos
+        th Followed Todos
+        th Actions
+    tbody
+      - @users.each do |user|
+        tr
+          td = user.name
+          td
+            code = user.token
+          td = user.assigned_todos.count
+          td = user.created_todos.count
+          td = user.followed_todos.count
+          td
+            = link_to 'View', user, class: 'btn btn-sm btn-outline-primary'
+
+- if @users.empty?
+  .alert.alert-info No users found.
