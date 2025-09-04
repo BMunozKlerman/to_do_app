@@ -13,6 +13,3 @@ h1 To-Do Items
   = render Lists::ListComponent.new(items: @to_do_items.completed)
   - if @to_do_items.completed.empty?
     .alert.alert-info No completed tasks.
-
-- if @to_do_items.empty?
-  .alert.alert-info No to-do items found.
