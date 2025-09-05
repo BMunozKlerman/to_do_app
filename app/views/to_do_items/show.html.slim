@@ -43,12 +43,6 @@
         
         .row.mb-3
           .col-sm-3
-            strong Token:
-          .col-sm-9
-            code = @to_do_item.token
-        
-        .row.mb-3
-          .col-sm-3
             strong Created:
           .col-sm-9 = @to_do_item.created_at.strftime('%B %d, %Y at %I:%M %p')
         
