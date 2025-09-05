@@ -2,6 +2,7 @@
 - La parte de LLM con Gemini
 - Refactor de los view components, mejora de estilos.
 - Tests
+- La parte de turbo con websocket para que comentarios aparezcan como de forma automática en todas las personas que esten activas en esa vista
 ### Cómo hiciste la validación de ese código (¿lo revisaste línea por línea?, ¿ejecutaste pruebas?, ¿lo modificaste?).
 Fue hecho con cursor, asique aceptaba o rechazaba según correspondía y con pruebas de la funcionalidad en la misma página, también hice cambios o nuevas sugerencias sobre lo realizado
 ### Por qué tomaste ciertas decisiones de diseño o arquitectura, incluso si la IA las sugirió. Por ejemplo, "La IA me propuso usar este ORM, pero lo modifiqué para que se ajustara a nuestra base de datos".
