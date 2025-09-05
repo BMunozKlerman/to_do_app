@@ -37,8 +37,5 @@ module ToDoApp
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-
-    # ViewComponent configuration
-    config.view_component.default_preview_layout = "component_preview"
   end
 end
