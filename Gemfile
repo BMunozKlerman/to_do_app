@@ -71,7 +71,7 @@ gem "shoulda-matchers", "~> 6.0", groups: [ :development, :test ]
 
 gem "slim-rails", "~> 3.7"
 
-gem "view_component", "~> 3.0"
+gem "view_component", "~> 4.0"
 
 gem "uuid", "~> 2.3"
 
