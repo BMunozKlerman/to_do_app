@@ -50,7 +50,7 @@ class ToDoItem < ApplicationRecord
     self.token = UUID.new.generate if token.blank?
   end
 
-    def due_date_not_in_past
+  def due_date_not_in_past
     return unless due_date.present?
     return if status == "completed" # Allow past dates for completed items
 
