@@ -1,15 +1,6 @@
 h1 Users
 
-= render Lists::ListComponent.new(
-    items: @users,
-    headers: [
-      { text: "Name", key: :name },
-      { text: "Assigned Todos", key: :assigned_todos_count },
-      { text: "Created Todos", key: :created_todos_count },
-      { text: "Followed Todos", key: :followed_todos_count },
-      { text: "Actions", block: ->(user) { link_to 'View', user, class: 'btn btn-sm btn-outline-primary' } }
-    ]
-  )
+= render Lists::ListComponent.new(items: @users, headers: [{ text: "Name", key: :name }, { text: "Assigned Todos", key: :assigned_todos_count }, { text: "Created Todos", key: :created_todos_count }, { text: "Followed Todos", key: :followed_todos_count }, { text: "Actions", block: ->(user) { link_to 'View', user, class: 'btn btn-sm btn-outline-primary' } }])
 
 - if @users.empty?
   .alert.alert-info No users found.
