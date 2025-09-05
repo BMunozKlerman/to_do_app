@@ -1,29 +1,16 @@
 # frozen_string_literal: true
 
 class Lists::ListComponent < ViewComponent::Base
-  def initialize(items:, headers: nil, css_class: "", table_class: "")
+  def initialize(items:, headers:, css_class: "", table_class: "")
     @items = items
-    @headers = headers || default_headers
+    @headers = headers
     @css_class = css_class
     @table_class = table_class
   end
 
   private
 
-  attr_reader :title, :items, :headers, :css_class, :table_class
-
-  def default_headers
-    [
-      { text: "", width: "50" },
-      { text: "Name" },
-      { text: "Due Date" },
-      { text: "Duration" },
-      { text: "Assigned To" },
-      { text: "Created By" },
-      { text: "Followers" },
-      { text: "Actions" }
-    ]
-  end
+  attr_reader :items, :headers, :css_class, :table_class
 
   def container_classes
     base_classes = "table-responsive dropdown-container"

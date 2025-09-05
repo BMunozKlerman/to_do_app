@@ -7,29 +7,12 @@ div class=container_classes style="overflow: visible;"
             = header[:text]
     tbody
       - items.each do |item|
-        tr class="#{'table-warning' if item.respond_to?(:overdue?) && item.overdue?}" style="border-bottom: 1px solid #dee2e6;"
-          td.text-center
-            div onclick="event.stopPropagation();"
-              - if item.respond_to?(:status)
-                = form_with model: item, local: true, class: 'd-inline' do |form|
-                  = form.check_box :status, { checked: item.completed?, onchange: 'this.form.submit();', class: 'form-check-input' }, 'completed', 'pending'
-          td
-            = item.name
-            - if item.respond_to?(:overdue?) && item.overdue?
-              span.badge.bg-danger.ms-2 Overdue
-          td = item.respond_to?(:due_date) ? item.due_date.strftime('%Y-%m-%d') : '-'
-          td
-            - if item.respond_to?(:estimated_duration) && item.estimated_duration.present?
-              span.badge.bg-info = item.estimated_duration
-            - else
-              span.text-muted No estimate
-          td = item.respond_to?(:assigned_to) ? item.assigned_to.name : '-'
-          td = item.respond_to?(:created_by) ? item.created_by.name : '-'
-          td
-            - if item.respond_to?(:followers) && item.followers.present?
-              = item.followers.count
-            - else
-              | 0
-          td
-            - if item.is_a?(ToDoItem)
-              = render Actions::ActionDropdownComponent.new(item: item)
+        tr style="border-bottom: 1px solid #dee2e6;"
+          - headers.each do |header|
+            td
+              - if header[:block]
+                = header[:block].call(item)
+              - elsif header[:key]
+                = item.send(header[:key]) if item.respond_to?(header[:key])
+              - else
+                | -

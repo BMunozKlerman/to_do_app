@@ -13,6 +13,19 @@ class User < ApplicationRecord
     ToDoItem.where("followers @> ?", [ id ].to_json)
   end
 
+  # Count methods for table display
+  def assigned_todos_count
+    assigned_todos.count
+  end
+
+  def created_todos_count
+    created_todos.count
+  end
+
+  def followed_todos_count
+    followed_todos.count
+  end
+
   private
 
   def generate_token
