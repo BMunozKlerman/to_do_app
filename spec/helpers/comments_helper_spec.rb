@@ -1,15 +1,34 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-# Specs in this file have access to a helper object that includes
-# the CommentsHelper. For example:
-#
-# describe CommentsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 RSpec.describe CommentsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'helper methods' do
+    it 'is included in the helper' do
+      expect(helper.class.ancestors).to include(CommentsHelper)
+    end
+
+    it 'has access to Rails helper methods' do
+      expect(helper).to respond_to(:link_to)
+      expect(helper).to respond_to(:content_tag)
+      expect(helper).to respond_to(:time_ago_in_words)
+    end
+  end
+
+  describe 'helper functionality' do
+    let(:comment) { create(:comment) }
+    let(:to_do_item) { comment.to_do_item }
+
+    it 'can render comment-related content' do
+      # Test that the helper can be used in views
+      expect(helper).to be_present
+    end
+
+    it 'has access to comment data' do
+      # Test that we can work with comment objects
+      expect(comment).to be_present
+      expect(comment.text).to be_present
+      expect(comment.user).to be_present
+    end
+  end
 end

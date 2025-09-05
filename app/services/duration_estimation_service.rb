@@ -34,7 +34,7 @@ Task: #{task_name}"
   def parse_duration_response(response)
     return "Unable to estimate duration" if response == "Unable to process request"
 
-    # Clean up the response to extract just the duration
-    response.gsub(/[^\w\s]/, "").strip
+    # Clean up the response to extract just the duration, preserving hyphens and common punctuation
+    response.gsub(/[^\w\s\-]/, "").strip
   end
 end
