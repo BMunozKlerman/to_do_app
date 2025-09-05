@@ -49,8 +49,16 @@ class ToDoItemsController < ApplicationController
 
   def add_follower
     user_id = params[:user_id]
-    @to_do_item.add_follower(user_id)
-    redirect_to @to_do_item, notice: "Follower added successfully."
+    if user_id.present?
+      begin
+        @to_do_item.add_follower(user_id)
+        redirect_to @to_do_item, notice: "Follower added successfully."
+      rescue => e
+        redirect_to @to_do_item, alert: "Error adding follower: #{e.message}"
+      end
+    else
+      redirect_to @to_do_item, alert: "Please select a user to follow."
+    end
   end
 
   def remove_follower

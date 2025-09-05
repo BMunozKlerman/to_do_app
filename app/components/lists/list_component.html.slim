@@ -1,18 +1,40 @@
 div class=container_classes style="overflow: visible;"
-  table class=table_classes style="position: relative; border-collapse: collapse;"
-    thead
-      tr
-        - headers.each do |header|
-          th width=header[:width]
-            = header[:text]
-    tbody
-      - items.each do |item|
-        tr style="border-bottom: 1px solid #dee2e6;"
+  / Desktop table view
+  .d-none.d-md-block
+    table class=table_classes style="position: relative; border-collapse: collapse;"
+      thead
+        tr
           - headers.each do |header|
-            td
-              - if header[:block]
+            th width=header[:width]
+              = header[:text]
+      tbody
+        - items.each do |item|
+          tr style="border-bottom: 1px solid #dee2e6;"
+            - headers.each do |header|
+              td
+                - if header[:block]
+                  = header[:block].call(item)
+                - elsif header[:key]
+                  = item.send(header[:key]) if item.respond_to?(header[:key])
+                - else
+                  | -
+
+  / Mobile card view
+  .d-md-none
+    - items.each do |item|
+      .card.mb-3
+        .card-body
+          - headers.each do |header|
+            - if header[:block]
+              .mb-2
+                - if header[:show_mobile_label] != false && header[:text].present? && !header[:text].empty?
+                  strong = "#{header[:text]}: "
                 = header[:block].call(item)
-              - elsif header[:key]
-                = item.send(header[:key]) if item.respond_to?(header[:key])
-              - else
-                | -
+            - elsif header[:key]
+              - if item.respond_to?(header[:key])
+                .mb-2
+                  - if header[:show_mobile_label] != false && header[:text].present? && !header[:text].empty?
+                    strong = "#{header[:text]}: "
+                  = item.send(header[:key])
+            - else
+              | -

@@ -1,6 +1,6 @@
 h1 New To-Do Item
 
-= form_with model: @to_do_item, local: true do |form|
+= form_with model: @to_do_item, local: true, authenticity_token: true do |form|
   - if @to_do_item.errors.any?
     .alert.alert-danger
       h4 = "#{pluralize(@to_do_item.errors.count, 'error')} prohibited this to-do item from being saved:"

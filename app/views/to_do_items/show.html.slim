@@ -5,7 +5,7 @@
           .col-sm-3
             strong Status:
           .col-sm-9
-            = form_with model: @to_do_item, local: true, class: 'd-inline' do |form|
+            = form_with model: @to_do_item, local: true, authenticity_token: true, class: 'd-inline' do |form|
               = form.check_box :status, { checked: @to_do_item.completed?, onchange: 'this.form.submit();', class: 'form-check-input me-2' }, 'completed', 'pending'
               = form.label :status, (@to_do_item.completed? ? 'Completed' : 'Pending'), class: 'form-check-label'
         
@@ -22,7 +22,7 @@
               span.badge.bg-info.me-2 = @to_do_item.estimated_duration
             - else
               span.text-muted.me-2 No estimate available
-            = form_with url: estimate_duration_to_do_item_path(@to_do_item), method: :post, local: true, class: 'd-inline' do |form|
+            = form_with url: estimate_duration_to_do_item_path(@to_do_item), method: :post, local: true, authenticity_token: true, class: 'd-inline' do |form|
               = form.submit 'Estimate Duration', class: 'btn btn-sm btn-outline-primary', data: { confirm: 'This will call the Gemini AI API to estimate duration. Continue?', disable_with: 'Estimating...' }
         
         .row.mb-3
@@ -61,10 +61,11 @@
         = render "comments/real_time_comments", to_do_item: @to_do_item
         
         .mt-3#comment-form
-          = form_with model: [@to_do_item, @to_do_item.comments.build], local: false, data: { turbo_stream: true } do |form|
+          = form_with model: [@to_do_item, @to_do_item.comments.build], local: true, authenticity_token: true do |form|
             .mb-3
-              = form.label :user_id, 'Comment as', class: 'form-label'
-              = form.select :user_id, options_from_collection_for_select(User.all.order(:name), :id, :name), { prompt: 'Select user' }, { class: 'form-select' }
+              = form.label :user_id, 'Comment as', class: 'block text-sm font-medium text-gray-700 mb-1'
+              .relative
+                = form.select :user_id, options_from_collection_for_select(User.all.order(:name), :id, :name), { prompt: 'Select user' }, { class: 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none', style: 'z-index: 10;' }
             .mb-3
               = form.label :text, 'Add a comment', class: 'form-label'
               = form.text_area :text, rows: 3, class: 'form-control', placeholder: 'Write your comment here...'
@@ -76,7 +77,7 @@
           - @follower_users.each do |user|
             .d-flex.justify-content-between.align-items-center.mb-2
               span = user.name
-              = form_with url: remove_follower_to_do_item_path(@to_do_item), method: :delete, local: true, class: 'd-inline' do |form|
+              = form_with url: remove_follower_to_do_item_path(@to_do_item), method: :delete, local: true, authenticity_token: true, class: 'd-inline' do |form|
                 = form.hidden_field :user_id, value: user.id
                 button.btn.btn-sm.btn-outline-danger type="submit" title="Remove follower"
                   i.fas.fa-times
@@ -84,5 +85,6 @@
           p.text-muted No followers yet.
         
         .mt-3
-          = form_with url: add_follower_to_do_item_path(@to_do_item), method: :patch, local: true do |form|
-            = form.select :user_id, options_from_collection_for_select(User.where.not(id: @follower_users.pluck(:id)).order(:name), :id, :name), { prompt: 'Select user to follow' }, { class: 'form-select', onchange: 'this.form.submit();' }
+          = form_with url: add_follower_to_do_item_path(@to_do_item), method: :patch, local: true, authenticity_token: true do |form|
+            .relative
+              = form.select :user_id, options_from_collection_for_select(User.where.not(id: @follower_users.pluck(:id)).order(:name), :id, :name), { prompt: 'Select user to follow' }, { class: 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white appearance-none', style: 'z-index: 10;', onchange: 'this.form.submit();' }
