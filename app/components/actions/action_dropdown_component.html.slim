@@ -1,9 +1,0 @@
-.d-flex.gap-1
-  - items.each do |item|
-    - unless item[:divider]
-      - link_options = { class: "btn btn-sm btn-outline-secondary #{item[:class]}", title: item[:text] }
-      - link_options[:method] = item[:method] if item[:method]
-      - link_options.merge!(item[:data]) if item[:data]
-      = link_to item[:url], link_options do
-        - if item[:icon]
-          i class="fas fa-#{item[:icon]}"
