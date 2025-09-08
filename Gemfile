@@ -63,7 +63,7 @@ gem "sidekiq", "~> 8.0"
 gem "redis", "~> 5.4"
 
 gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
-gem "factory_bot_rails", "~> 6.4", groups: [ :development, :test ]
+gem "factory_bot_rails", "~> 6.5", groups: [ :development, :test ]
 gem "rails-controller-testing", "~> 1.0", groups: [ :development, :test ]
 gem "capybara", "~> 3.39", groups: [ :development, :test ]
 gem "faker", "~> 3.0", groups: [ :development, :test ]
