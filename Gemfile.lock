@@ -117,7 +117,7 @@ GEM
       tzinfo
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
-    factory_bot_rails (6.5.0)
+    factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
     faker (3.5.2)
@@ -425,7 +425,7 @@ DEPENDENCIES
   cssbundling-rails
   debug
   dotenv-rails (~> 3.1)
-  factory_bot_rails (~> 6.4)
+  factory_bot_rails (~> 6.5)
   faker (~> 3.0)
   httparty (~> 0.21)
   jbuilder
